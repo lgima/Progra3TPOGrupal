@@ -1,74 +1,81 @@
 package edu.uade.progra3.tpo.controller;
 
-import edu.uade.progra3.tpo.service.GraphAlgorithms;
+import edu.uade.progra3.tpo.service.GraphService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/graph")
 public class GraphController {
-    private final GraphAlgorithms graphAlgorithms;
+    private final GraphService graphService;
 
-    public GraphController(GraphAlgorithms graphAlgorithms) {
-        this.graphAlgorithms = graphAlgorithms;
+    public GraphController(GraphService graphService) {
+        this.graphService = graphService;
     }
 
+    // Basic Graph Algorithms
     @GetMapping("/bfs/{startCity}")
     public List<String> bfs(@PathVariable String startCity) {
-        return graphAlgorithms.bfs(startCity);
+        return graphService.bfs(startCity);
     }
 
     @GetMapping("/dfs/{startCity}")
     public List<String> dfs(@PathVariable String startCity) {
-        return graphAlgorithms.dfs(startCity);
+        return graphService.dfs(startCity);
     }
 
+    // Minimum Spanning Tree Algorithms
+    @GetMapping("/mst/prim")
+    public Map<String, Object> prim() {
+        return graphService.findMinimumSpanningTreePrim();
+    }
+
+    //Kruskal
+    @GetMapping("/mst/kruskal")
+    public Map<String, Object> kruskal() {
+        return graphService.findMinimumSpanningTreeKruskal();
+    }
+
+    // Shortest Path
     @GetMapping("/shortestPath")
     public Map<String, Object> shortestPath(
             @RequestParam String from,
             @RequestParam String to) {
-        return graphAlgorithms.shortestPath(from, to);
+        return graphService.findShortestPath(from, to);
     }
 
-    @GetMapping("/prim")
-    public Map<String, Object> prim() {
-        return graphAlgorithms.prim();
-    }
-
-    @GetMapping("/kruskal")
-    public Map<String, Object> kruskal() {
-        return graphAlgorithms.kruskal();
-    }
-
+    // Greedy Algorithms
     @GetMapping("/greedy/tsp/{startCity}")
     public Map<String, Object> greedyTSP(@PathVariable String startCity) {
-        return graphAlgorithms.greedyTSP(startCity);
+        return graphService.solveTSPGreedy(startCity);
     }
 
-    @GetMapping("/quicksort/distances/{fromCity}")
-    public List<Map<String, Object>> quickSortCitiesByDistance(@PathVariable String fromCity) {
-        return graphAlgorithms.quickSortCitiesByDistance(fromCity);
+    // Divide and Conquer
+    @GetMapping("/sort/cities/{fromCity}")
+    public List<Map<String, Object>> sortCitiesByDistance(@PathVariable String fromCity) {
+        return graphService.sortCitiesByDistance(fromCity);
     }
 
-    @GetMapping("/dynamic/paths")
+    // Dynamic Programming
+    @GetMapping("/paths")
     public List<Map<String, Object>> findAllPaths(
             @RequestParam String from,
             @RequestParam String to,
             @RequestParam(defaultValue = "5") int maxLength) {
-        return graphAlgorithms.findAllPaths(from, to, maxLength);
+        return graphService.findAllPaths(from, to, maxLength);
     }
 
-    @GetMapping("/backtracking/cycles/{startCity}")
+    // Backtracking
+    @GetMapping("/cycles/{startCity}")
     public List<Map<String, Object>> findAllCycles(
             @PathVariable String startCity,
             @RequestParam(defaultValue = "5") int maxLength) {
-        return graphAlgorithms.findAllCycles(startCity, maxLength);
+        return graphService.findAllCycles(startCity, maxLength);
     }
 
-    @PostMapping("/branch-and-bound/tsp")
+    // Branch and Bound
+    @PostMapping("/tsp/optimal")
     public Map<String, Object> tspBranchAndBound(@RequestBody List<String> cities) {
-        return graphAlgorithms.tspBranchAndBound(cities);
+        return graphService.solveTSPBranchAndBound(cities);
     }
 }
