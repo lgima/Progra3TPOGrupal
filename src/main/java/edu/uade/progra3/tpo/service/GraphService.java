@@ -19,6 +19,7 @@ public class GraphService {
     private final DynamicProgrammingAlgorithms dpAlgorithms;
     private final BacktrackingAlgorithms backtrackingAlgorithms;
     private final BranchAndBoundAlgorithms branchAndBoundAlgorithms;
+    private final PathFindingAlgorithms pathFindingAlgorithms;
 
     private Graph cachedGraph;
     private long lastGraphBuildTime;
@@ -33,6 +34,7 @@ public class GraphService {
         this.dpAlgorithms = new DynamicProgrammingAlgorithms();
         this.backtrackingAlgorithms = new BacktrackingAlgorithms();
         this.branchAndBoundAlgorithms = new BranchAndBoundAlgorithms();
+        this.pathFindingAlgorithms = new PathFindingAlgorithms();
     }
 
     private Graph buildGraphFromDatabase() {
@@ -91,6 +93,12 @@ public class GraphService {
             .orElse(Map.of("route", List.of(), "totalDistance", 0));
     }
 
+    public Map<String, Object> findShortestPathDijkstra(String startCity, String endCity) {
+        validateCity(startCity);
+        validateCity(endCity);
+        return pathFindingAlgorithms.dijkstra(getGraph(), startCity, endCity);
+    }
+
     public Map<String, Object> findMinimumSpanningTreePrim() {
         return mstAlgorithms.prim(getGraph());
     }
@@ -117,6 +125,10 @@ public class GraphService {
 
     public Map<String, Object> solveTSPBranchAndBound(List<String> cities) {
         return branchAndBoundAlgorithms.tspBranchAndBound(getGraph(), cities);
+    }
+
+    public List<String> mergeSortCitiesByName() {
+        return divideAndConquerAlgorithms.mergeSortCitiesByName(getGraph());
     }
 
     private void validateCity(String cityName) {

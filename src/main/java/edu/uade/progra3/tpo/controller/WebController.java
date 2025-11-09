@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -39,6 +38,11 @@ public class WebController {
             case 10 -> graphService.solveTSPBranchAndBound(
                 Arrays.asList("Buenos Aires", "Córdoba", "Rosario", "Mendoza", "Mar del Plata")
             );
+            case 11 -> Map.of(
+                "cities", graphService.mergeSortCitiesByName(),
+                "description", "Ciudades ordenadas alfabéticamente"
+            );
+            case 12 -> graphService.findShortestPathDijkstra("Buenos Aires", "Mendoza");
             default -> "Opción no válida";
         };
 
@@ -59,6 +63,8 @@ public class WebController {
             case 8 -> "All Paths (Dynamic Programming)";
             case 9 -> "Find Cycles (Backtracking)";
             case 10 -> "TSP (Branch and Bound)";
+            case 11 -> "Merge Sort - Ordenamiento alfabético de ciudades";
+            case 12 -> "Dijkstra - Camino más corto";
             default -> "Unknown Algorithm";
         };
     }

@@ -39,4 +39,45 @@ public class DivideAndConquerAlgorithms {
         Collections.swap(list, i + 1, high);
         return i + 1;
     }
+
+    public List<String> mergeSortCitiesByName(Graph graph) {
+        List<String> cities = new ArrayList<>(graph.getVertices());
+        return mergeSort(cities);
+    }
+
+    private List<String> mergeSort(List<String> list) {
+        if (list.size() <= 1) {
+            return list;
+        }
+
+        int middle = list.size() / 2;
+        List<String> left = new ArrayList<>(list.subList(0, middle));
+        List<String> right = new ArrayList<>(list.subList(middle, list.size()));
+
+        left = mergeSort(left);
+        right = mergeSort(right);
+
+        return merge(left, right);
+    }
+
+    private List<String> merge(List<String> left, List<String> right) {
+        List<String> result = new ArrayList<>();
+        int leftIndex = 0;
+        int rightIndex = 0;
+
+        while (leftIndex < left.size() && rightIndex < right.size()) {
+            if (left.get(leftIndex).compareTo(right.get(rightIndex)) <= 0) {
+                result.add(left.get(leftIndex));
+                leftIndex++;
+            } else {
+                result.add(right.get(rightIndex));
+                rightIndex++;
+            }
+        }
+
+        result.addAll(left.subList(leftIndex, left.size()));
+        result.addAll(right.subList(rightIndex, right.size()));
+
+        return result;
+    }
 }
