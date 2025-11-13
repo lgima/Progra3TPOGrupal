@@ -18,19 +18,19 @@ public class BranchAndBoundAlgorithms {
      */
     public Map<String, Object> tspBranchAndBound(Graph graph, List<String> citiesToVisit) {
         // Preparar estructuras: ciudades, matriz de distancias y valores iniciales
-        initialize(graph, citiesToVisit);
-        
-        boolean[] visited = new boolean[n];
-        visited[0] = true;
-        List<String> currentPath = new ArrayList<>();
-        currentPath.add(cities.get(0));
-        
+        initialize(graph, citiesToVisit); // Si se elimina, no se inicializarán las estructuras necesarias
+
+        boolean[] visited = new boolean[n]; // Si se elimina, no se podrá rastrear las ciudades visitadas
+        visited[0] = true; // Si se elimina, la ciudad inicial no será marcada como visitada
+        List<String> currentPath = new ArrayList<>(); // Si se elimina, no se podrá construir la ruta actual
+        currentPath.add(cities.get(0)); // Si se elimina, no se agregará la ciudad inicial a la ruta
+
         // Empezar búsqueda con poda (branch & bound)
-        branchAndBound(visited, currentPath, 0, 1);
+        branchAndBound(visited, currentPath, 0, 1); // Si se elimina, no se realizará la búsqueda
 
         return Map.of(
-            "route", finalPath,
-            "totalDistance", finalCost
+            "route", finalPath, // Si se elimina, no se devolverá la ruta óptima
+            "totalDistance", finalCost // Si se elimina, no se devolverá el costo total
         );
     }
 
@@ -39,18 +39,16 @@ public class BranchAndBoundAlgorithms {
      * - Prepara matriz de distancias y estructuras iniciales.
      */
     private void initialize(Graph graph, List<String> citiesToVisit) {
-        // Guardar lista de ciudades y construir matriz de costes entre ellas
-        this.cities = new ArrayList<>(citiesToVisit);
-        this.n = cities.size();
-        this.distanceMatrix = new int[n][n];
-        this.finalCost = Integer.MAX_VALUE;
-        this.finalPath = new ArrayList<>();
+        this.cities = new ArrayList<>(citiesToVisit); // Si se elimina, no se almacenarán las ciudades a visitar
+        this.n = cities.size(); // Si se elimina, no se calculará el número de ciudades
+        this.distanceMatrix = new int[n][n]; // Si se elimina, no se creará la matriz de distancias
+        this.finalCost = Integer.MAX_VALUE; // Si se elimina, no se inicializará el costo óptimo
+        this.finalPath = new ArrayList<>(); // Si se elimina, no se inicializará la ruta óptima
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { // Si se elimina, no se llenará la matriz de distancias
             for (int j = 0; j < n; j++) {
-                if (i != j) {
-                    // Cargar coste entre city i y city j
-                    distanceMatrix[i][j] = graph.getWeight(cities.get(i), cities.get(j));
+                if (i != j) { // Si se elimina, se incluirán distancias inválidas
+                    distanceMatrix[i][j] = graph.getWeight(cities.get(i), cities.get(j)); // Si se elimina, no se calcularán las distancias
                 }
             }
         }
@@ -62,37 +60,32 @@ public class BranchAndBoundAlgorithms {
      */
     private void branchAndBound(boolean[] visited, List<String> currentPath, 
                               int currentCost, int level) {
-        // Si ya hemos visitado todas las ciudades, calcular coste de retorno y actualizar solución
-        if (level == n) {
-            int lastCity = cities.indexOf(currentPath.get(currentPath.size() - 1));
-            int returnCost = distanceMatrix[lastCity][0];
-            
-            if (currentCost + returnCost < finalCost) {
-                // Hemos encontrado una solución mejor; guardarla
-                finalCost = currentCost + returnCost;
-                finalPath = new ArrayList<>(currentPath);
-                finalPath.add(cities.get(0));
+        if (level == n) { // Si se elimina, no se detectará el caso base
+            int lastCity = cities.indexOf(currentPath.get(currentPath.size() - 1)); // Si se elimina, no se calculará la última ciudad
+            int returnCost = distanceMatrix[lastCity][0]; // Si se elimina, no se calculará el costo de retorno
+
+            if (currentCost + returnCost < finalCost) { // Si se elimina, no se actualizará la solución óptima
+                finalCost = currentCost + returnCost; // Si se elimina, no se guardará el nuevo costo óptimo
+                finalPath = new ArrayList<>(currentPath); // Si se elimina, no se guardará la nueva ruta óptima
+                finalPath.add(cities.get(0)); // Si se elimina, no se cerrará el ciclo en la ruta
             }
-            return;
+            return; // Si se elimina, la recursión continuará innecesariamente
         }
 
-        // Intentar cada ciudad no visitada, podando ramas cuyo coste ya excede finalCost
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                int lastCity = cities.indexOf(currentPath.get(currentPath.size() - 1));
-                int newCost = currentCost + distanceMatrix[lastCity][i];
-                
-                if (newCost < finalCost) {
-                    // Explorar esta rama (marcar, añadir a camino, recursar)
-                    visited[i] = true;
-                    currentPath.add(cities.get(i));
-                    
-                    branchAndBound(visited, currentPath, newCost, level + 1);
-                    
-                    // Deshacer cambios (backtrack)
-                    visited[i] = false;
-                    currentPath.remove(currentPath.size() - 1);
-                } // si newCost >= finalCost se poda esta rama
+        for (int i = 0; i < n; i++) { // Si se elimina, no se explorarán las ciudades
+            if (!visited[i]) { // Si se elimina, se podrían visitar ciudades repetidas
+                int lastCity = cities.indexOf(currentPath.get(currentPath.size() - 1)); // Si se elimina, no se calculará la última ciudad
+                int newCost = currentCost + distanceMatrix[lastCity][i]; // Si se elimina, no se calculará el nuevo costo
+
+                if (newCost < finalCost) { // Si se elimina, no se podarán ramas subóptimas
+                    visited[i] = true; // Si se elimina, no se marcará la ciudad como visitada
+                    currentPath.add(cities.get(i)); // Si se elimina, no se agregará la ciudad a la ruta
+
+                    branchAndBound(visited, currentPath, newCost, level + 1); // Si se elimina, no se explorarán las ramas
+
+                    visited[i] = false; // Si se elimina, no se deshará el marcado de la ciudad
+                    currentPath.remove(currentPath.size() - 1); // Si se elimina, no se deshará la ruta actual
+                }
             }
         }
     }
