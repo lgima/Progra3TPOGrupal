@@ -1,0 +1,211 @@
+ALGORITMOS DE GRAFOS - DOCUMENTACIÓN DETALLADA
+
+1. RECORRIDOS BÁSICOS
+-----------------------
+A. Breadth-First Search (BFS)
+Características:
+- Explora el grafo nivel por nivel
+- Garantiza el camino más corto en número de saltos
+- Complejidad: O(V + E) donde V son vértices y E aristas
+
+Implementación Detallada:
+- Inicializa una cola y un conjunto de visitados
+- Añade la ciudad inicial a la cola y a visitados
+- Mientras la cola no esté vacía:
+  * Extrae una ciudad de la cola
+  * Para cada ciudad vecina no visitada:
+    - Añade a la cola y marca como visitada
+- Permite descubrir todas las ciudades alcanzables en orden de distancia
+
+B. Depth-First Search (DFS)
+Características:
+- Explora el grafo en profundidad máxima primero
+- Útil para encontrar ciclos y componentes conectados
+- Complejidad: O(V + E)
+
+Implementación Detallada:
+- Usa recursión o una pila explícita
+- Para cada ciudad no visitada:
+  * Marca la ciudad como visitada
+  * Para cada vecino no visitado:
+    - Llama recursivamente a DFS
+- Retrocede cuando llega a un camino sin salida
+- Útil para encontrar rutas largas y ciclos
+
+2. ALGORITMOS DE CAMINO MÁS CORTO
+---------------------------------
+A. Dijkstra
+Características:
+- Encuentra el camino más corto entre dos nodos
+- Óptimo para grafos con pesos positivos
+- Complejidad: O((V + E) log V)
+
+Implementación Detallada:
+- Mantiene un mapa de distancias y nodos previos
+- Usa una cola de prioridad para selección eficiente
+- Para cada ciudad:
+  * Selecciona la ciudad no visitada con menor distancia
+  * Actualiza las distancias a sus vecinos si se encuentra un camino más corto
+  * Mantiene registro del camino mediante nodos previos
+- Reconstruye el camino al finalizar
+- Garantiza encontrar el camino más corto en kilómetros
+
+3. ÁRBOLES DE EXPANSIÓN MÍNIMA
+-----------------------------
+A. Prim
+Características:
+- Construye un árbol que conecta todas las ciudades con distancia mínima total
+- Crece desde un único vértice de forma continua
+- Complejidad: O(E log V)
+
+Implementación Detallada:
+- Comienza desde cualquier ciudad
+- Mantiene un conjunto de ciudades conectadas
+- En cada paso:
+  * Encuentra la arista de menor peso que conecta con una ciudad no visitada
+  * Añade la arista al árbol y la ciudad al conjunto
+- Continúa hasta conectar todas las ciudades
+- Garantiza la mínima distancia total de conexión
+
+B. Kruskal
+Características:
+- También construye árbol de expansión mínima
+- Considera todas las aristas globalmente
+- Complejidad: O(E log E)
+
+Implementación Detallada:
+- Ordena todas las aristas por peso
+- Usa estructura Union-Find para manejo eficiente
+- Para cada arista en orden ascendente:
+  * Si conecta componentes diferentes:
+    - Añade al árbol
+    - Une los componentes
+- Evita ciclos mediante Union-Find
+- Alternativa eficiente para grafos dispersos
+
+4. ALGORITMOS VORACES (GREEDY)
+-----------------------------
+A. TSP Greedy
+Características:
+- Resuelve aproximadamente el Problema del Viajante
+- Decisiones localmente óptimas
+- Complejidad: O(n²)
+
+Implementación Detallada:
+- Comienza en la ciudad inicial
+- En cada paso:
+  * Encuentra la ciudad no visitada más cercana
+  * Se mueve a esa ciudad
+  * Marca como visitada
+- Al final:
+  * Regresa a la ciudad inicial
+- Rápido pero no garantiza la mejor solución
+- Útil para aproximaciones rápidas
+
+5. DIVIDE Y VENCERÁS
+-------------------
+A. QuickSort para Distancias
+Características:
+- Ordena ciudades por distancia desde un punto
+- Particionamiento eficiente
+- Complejidad promedio: O(n log n)
+
+Implementación Detallada:
+- Selecciona un pivote (distancia)
+- Particiona las ciudades:
+  * Menores que el pivote a la izquierda
+  * Mayores a la derecha
+- Recursivamente ordena las particiones
+- Combina resultados automáticamente
+- Eficiente para grandes conjuntos de datos
+
+B. MergeSort para Nombres
+Características:
+- Ordena ciudades alfabéticamente
+- División y combinación estable
+- Complejidad garantizada: O(n log n)
+
+Implementación Detallada:
+- Divide la lista en mitades
+- Ordena recursivamente cada mitad
+- Combina las mitades ordenadas:
+  * Compara elementos de ambas mitades
+  * Construye lista resultante en orden
+- Mantiene el orden relativo de elementos iguales
+- Ideal para ordenamiento estable
+
+6. PROGRAMACIÓN DINÁMICA
+-----------------------
+Características:
+- Encuentra todos los caminos posibles
+- Optimiza cálculos mediante memorización
+- Complejidad: O(V * 2^V)
+
+Implementación Detallada:
+- Mantiene una tabla de subproblemas resueltos
+- Para cada par de ciudades:
+  * Calcula caminos posibles hasta longitud máxima
+  * Almacena resultados intermedios
+  * Reutiliza cálculos previos
+- Evita recálculos mediante memorización
+- Encuentra soluciones óptimas para subproblemas
+
+7. BACKTRACKING
+--------------
+Características:
+- Búsqueda exhaustiva de ciclos
+- Exploración sistemática
+- Complejidad: O(V!)
+
+Implementación Detallada:
+- Mantiene un camino actual
+- Para cada ciudad no visitada:
+  * Añade al camino
+  * Explora recursivamente
+  * Si no encuentra solución:
+    - Retrocede (backtrack)
+    - Prueba siguiente opción
+- Encuentra todos los ciclos posibles
+- Útil para exploración completa
+
+8. RAMIFICACIÓN Y PODA
+---------------------
+A. TSP Branch and Bound
+Características:
+- Búsqueda exhaustiva optimizada
+- Poda temprana de caminos subóptimos
+- Complejidad: O(n!) en peor caso
+
+Implementación Detallada:
+- Mantiene mejor solución encontrada
+- Para cada posible camino:
+  * Calcula cota inferior del costo
+  * Si excede mejor solución:
+    - Poda la rama
+  * Si no:
+    - Explora recursivamente
+- Actualiza mejor solución cuando encuentra una completa
+- Garantiza encontrar la solución óptima
+- Más eficiente que fuerza bruta pura
+
+OPTIMIZACIONES IMPLEMENTADAS
+---------------------------
+1. Caché de Grafo
+- Almacena estructura del grafo en memoria
+- Actualiza cada minuto
+- Reduce accesos a base de datos
+
+2. Validación de Datos
+- Verifica existencia de ciudades
+- Comprueba conectividad del grafo
+- Manejo de casos especiales
+
+3. Manejo de Errores
+- Excepciones personalizadas
+- Logging detallado
+- Recuperación graciosa
+
+4. Estructuras de Datos
+- Uso eficiente de HashMaps para acceso O(1)
+- PriorityQueues para selección eficiente
+- ArrayList para manipulación dinámica

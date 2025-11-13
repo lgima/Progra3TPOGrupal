@@ -9,7 +9,8 @@ public class GreedyAlgorithms {
      * - Heurística del vecino más cercano: desde startCity selecciona iterativamente
      *   la ciudad no visitada más cercana.
      * - Es una aproximación rápida pero no garantiza óptimo.
-     * Complejidad temporal: O(V^2) (en cada paso se examinan hasta O(V) candidatos).
+     * Complejidad temporal: O(V^2) (complejidad cuadrática — en cada uno de los (vertices)pasos buscas la ciudad 
+     *                                                        no visitada más cercana examinando hasta O(V) candidatos,).
      */
     public Map<String, Object> greedyTSP(Graph graph, String startCity) {
         List<String> route = new ArrayList<>();

@@ -9,7 +9,7 @@ public class PathFindingAlgorithms {
      * - Implementa Dijkstra usando una PriorityQueue (min-heap) para obtener el camino
      *   de menor coste desde start hasta end.
      * - Mantiene distancias y nodos previos para reconstruir la ruta.
-     * Complejidad temporal: O((V + E) log V) típicamente O(E log V) con heap.
+     * Complejidad temporal: O(E) log V), Extraer mínimos: O(V \log V) - PQ y Insertar/Actualizar vecinos: (E \log V) - Aristas x vertices
      */
     public Map<String, Object> dijkstra(Graph graph, String start, String end) {
         Map<String, Integer> distances = new HashMap<>();
@@ -30,7 +30,7 @@ public class PathFindingAlgorithms {
             // Extraer el vértice con distancia mínima conocida
             String current = queue.poll();
             if (current.equals(end)) {
-                // Si alcanzamos el destino podemos salir antes (optimización)
+                // Si alcanzamos el destino salimos(optimización)
                 break;
             }
             
@@ -40,7 +40,7 @@ public class PathFindingAlgorithms {
             }
             visited.add(current);
 
-            // Relajar todas las aristas salientes del vértice actual
+            //todas las aristas salientes del vértice actual
             for (Map.Entry<String, Integer> neighbor : graph.getNeighbors(current).entrySet()) {
                 String next = neighbor.getKey();
                 // calcular distancia provisional pasando por 'current'

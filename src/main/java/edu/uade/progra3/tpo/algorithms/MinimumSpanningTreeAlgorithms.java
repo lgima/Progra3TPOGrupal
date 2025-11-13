@@ -8,7 +8,9 @@ public class MinimumSpanningTreeAlgorithms {
 	 * prim(graph)
 	 * - Implementa Prim para construir el árbol de expansión mínima.
 	 * - Usa un conjunto de vértices visitados y una PQ de aristas.
-	 * Complejidad temporal: O(E log V) (dependiendo de la PQ).
+	 * Complejidad temporal: O(E log V) - E aristas, V vertices.
+     * la PQ guarda aristas relacionadas con hasta V vértices) → aproximado O(log V) +
+     * O(E) porque en el peor caso cada arista se considera una vez.
 	 */
 	public Map<String, Object> prim(Graph graph) {
         Set<String> visited = new HashSet<>();
@@ -67,18 +69,16 @@ public class MinimumSpanningTreeAlgorithms {
 	/**
 	 * kruskal(graph)
 	 * - Implementa Kruskal: ordenar todas las aristas y unir componentes si no crean ciclos.
-	 * - Nota: la implementación de findSet/union es ingenua (usa mapas/conjuntos) en lugar de
-	 *   Disjoint Set Union optimizado; por tanto las operaciones de unión/búsqueda pueden ser costosas.
-	 * Complejidad temporal: O(E log E) por la ordenación; con la implementación ingenua puede aumentar
-	 *   el coste en las operaciones de forest (peor caso cercano a O(V^2) en casos extremos).
+	 * - Nota: la implementación de findSet/union usa mapas/conjuntos.
+	 * Complejidad temporal: O(E log E) por la ordenación; (peor caso cercano a O(V^2) en casos extremos).
 	 */
     public Map<String, Object> kruskal(Graph graph) {
-        // Implementation of Kruskal's algorithm
+       
         List<KruskalEdge> resultEdges = new ArrayList<>();
         Map<String, Set<String>> forest = new HashMap<>();
         int totalWeight = 0;
         
-        // Initialize forest with singleton sets (cada vértice en su componente)
+        // Inicializar arbol con conjuntos(cada vértice en su componente)
         for (String vertex : graph.getVertices()) {
             Set<String> set = new HashSet<>();
             set.add(vertex);
@@ -124,18 +124,23 @@ public class MinimumSpanningTreeAlgorithms {
         return null;
     }
     
+    //fusiona dos componentes separados cuando se elige una arista válida.
     private void union(Map<String, Set<String>> forest, String setA, String setB) {
+        // Crea un nuevo conjunto copiando todos los elementos del conjunto A
         Set<String> unionSet = new HashSet<>(forest.get(setA));
+        //Agrega todos los elementos del conjunto B al nuevo conjunto
         unionSet.addAll(forest.get(setB));
+        //Actualiza el mapa 'forest' para TODOS los vértices involucrados
         for (String vertex : unionSet) {
             forest.put(vertex, unionSet);
         }
     }
     
+    //epresentar las conexiones del grafo de manera que se puedan ordenar.
     private static class KruskalEdge implements Comparable<KruskalEdge> {
-        String from;
-        String to;
-        int weight;
+        String from; //origen
+        String to;  //destino
+        int weight; //peso
         
         KruskalEdge(String from, String to, int weight) {
             this.from = from;
@@ -145,6 +150,7 @@ public class MinimumSpanningTreeAlgorithms {
         
         @Override
         public int compareTo(KruskalEdge other) {
+            // Compara esta arista con otra basándose en el PESO
             return Integer.compare(this.weight, other.weight);
         }
     }

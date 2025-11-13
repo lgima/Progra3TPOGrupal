@@ -7,7 +7,7 @@ public class GraphBasicAlgorithms {
     /**
      * bfs(graph, start)
      * - Recorrido en anchura usando una cola; devuelve el orden de visita.
-     * Complejidad temporal: O(V + E).
+     * Complejidad temporal: O(V + E).(num vertices + num aristas), lineal, ya que cada nodo y arista se procesa una vez.
      */
     public List<String> bfs(Graph graph, String start) {
         List<String> visited = new ArrayList<>();
@@ -34,7 +34,7 @@ public class GraphBasicAlgorithms {
     /**
      * dfs(graph, start)
      * - Recorrido en profundidad (usa función recursiva auxiliar).
-     * Complejidad temporal: O(V + E).
+     * Complejidad temporal: O(V + E), (num vertices + num aristas), lineal, ya que cada nodo y arista se procesa una vez.
      */
     public List<String> dfs(Graph graph, String start) {
         List<String> visited = new ArrayList<>();
