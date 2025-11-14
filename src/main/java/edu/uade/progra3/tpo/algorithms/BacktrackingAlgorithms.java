@@ -8,7 +8,8 @@ public class BacktrackingAlgorithms {
      * findAllCycles(graph, startCity, maxLength)
      * - Busca por backtracking todos los ciclos simples que comienzan y terminan en startCity
      *   con longitud máxima maxLength.
-     * Complejidad temporal: exponencial respecto a la longitud máxima y ramificación (O(b^L)).
+     * Complejidad temporal: exponencial respecto a la longitud máxima y ramificación (O(b^L)). 
+     * b es el numero promedio de vecinos de cada ciudad y l es maxlenght, la longitud del camino.
      */
     public List<Map<String, Object>> findAllCycles(Graph graph, String startCity, int maxLength) {
         // Iniciar búsqueda desde la ciudad inicial, manteniendo el camino actual
@@ -50,12 +51,14 @@ public class BacktrackingAlgorithms {
                 continue;
             }
             
+            //si me paso por una ciudad ya visitada, no la vuelvo a visitar
             if (!path.contains(nextCity) || (nextCity.equals(start) && path.size() > 2)) {
                 // Extender camino y recursar
                 path.add(nextCity);
+                // Llamada recursiva 2 - para seguir explorando a partir de esta ciudad añadida
                 findCyclesBacktrack(graph, nextCity, start, maxLength, path,
                                   totalDistance + neighbor.getValue(), allCycles);
-                // Backtrack: quitar el último nodo añadido
+                // Backtrack: quitar el último nodo añadido, el bucle for de arriba todavía tiene que probar otros vecinos.
                 path.remove(path.size() - 1);
             }
         }

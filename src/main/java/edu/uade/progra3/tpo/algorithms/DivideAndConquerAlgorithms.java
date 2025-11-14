@@ -43,7 +43,7 @@ public class DivideAndConquerAlgorithms {
      * - Particiona según el pivote (último elemento) y retorna índice de partición.
      */
     private int partition(List<Map<String, Object>> list, int low, int high) {
-        // Elegir el pivote (aquí: último elemento) y reordenar la sublista
+        // Elegir el pivote (último elemento) y reordenar la sublista
         int pivot = (int) list.get(high).get("distance");
         int i = low - 1;
 

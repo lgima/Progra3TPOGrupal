@@ -13,7 +13,7 @@ public class GraphController {
         this.graphService = graphService;
     }
 
-    // Basic Graph Algorithms
+    // Recorridos Básicos Gráfos
     @GetMapping("/bfs/{startCity}")
     public List<String> bfs(@PathVariable String startCity) {
         return graphService.bfs(startCity);
@@ -24,7 +24,7 @@ public class GraphController {
         return graphService.dfs(startCity);
     }
 
-    // Minimum Spanning Tree Algorithms
+    // Arboles de Expansión Mínima - MST
     @GetMapping("/mst/prim")
     public Map<String, Object> prim() {
         return graphService.findMinimumSpanningTreePrim();
@@ -36,7 +36,8 @@ public class GraphController {
         return graphService.findMinimumSpanningTreeKruskal();
     }
 
-    // Shortest Path
+    // Camino màs corto - Djikstra
+    //calcula el camino más corto entre dos ciudades dadas (start y end) y devuelve la ruta junto con la distancia total.
     @GetMapping("/shortestPath")
     public Map<String, Object> shortestPath(
             @RequestParam String from,
@@ -44,19 +45,19 @@ public class GraphController {
         return graphService.findShortestPath(from, to);
     }
 
-    // Greedy Algorithms
+    // Greedy 
     @GetMapping("/greedy/tsp/{startCity}")
     public Map<String, Object> greedyTSP(@PathVariable String startCity) {
         return graphService.solveTSPGreedy(startCity);
     }
 
-    // Divide and Conquer
+    // Divide y Conquista
     @GetMapping("/sort/cities/{fromCity}")
     public List<Map<String, Object>> sortCitiesByDistance(@PathVariable String fromCity) {
         return graphService.sortCitiesByDistance(fromCity);
     }
 
-    // Dynamic Programming
+    // Programación Dinámica
     @GetMapping("/paths")
     public List<Map<String, Object>> findAllPaths(
             @RequestParam String from,
