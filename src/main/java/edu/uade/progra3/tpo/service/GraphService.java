@@ -1,12 +1,25 @@
 package edu.uade.progra3.tpo.service;
 
-import edu.uade.progra3.tpo.algorithms.*;
-import edu.uade.progra3.tpo.model.*;
-import edu.uade.progra3.tpo.repository.CityRepository;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import java.util.*;
+
+import edu.uade.progra3.tpo.algorithms.BacktrackingAlgorithms;
+import edu.uade.progra3.tpo.algorithms.BranchAndBoundAlgorithms;
+import edu.uade.progra3.tpo.algorithms.DivideAndConquerAlgorithms;
+import edu.uade.progra3.tpo.algorithms.DynamicProgrammingAlgorithms;
+import edu.uade.progra3.tpo.algorithms.GraphBasicAlgorithms;
+import edu.uade.progra3.tpo.algorithms.GreedyAlgorithms;
+import edu.uade.progra3.tpo.algorithms.MinimumSpanningTreeAlgorithms;
+import edu.uade.progra3.tpo.algorithms.PathFindingAlgorithms;
+import edu.uade.progra3.tpo.model.City;
+import edu.uade.progra3.tpo.model.Graph;
+import edu.uade.progra3.tpo.model.Road;
+import edu.uade.progra3.tpo.repository.CityRepository;
 
 @Service
 public class GraphService {
@@ -87,9 +100,14 @@ public class GraphService {
     public Map<String, Object> findShortestPath(String startCity, String endCity) {
         validateCity(startCity);
         validateCity(endCity);
-        return dpAlgorithms.findAllPaths(getGraph(), startCity, endCity, Integer.MAX_VALUE)
-            .stream()
-            .min(Comparator.comparingInt(m -> (Integer) m.get("totalDistance")))
+        
+        // Usar un maxLength razonable: número de ciudades (peor caso: visitar todas)
+        int maxLength = getGraph().getVertices().size();
+        
+        List<Map<String, Object>> paths = dpAlgorithms.findAllPaths(getGraph(), startCity, endCity, maxLength);
+        
+        return paths.stream()
+            .min(Comparator.comparingLong(m -> (Long) m.get("totalDistance")))
             .orElse(Map.of("route", List.of(), "totalDistance", 0));
     }
 

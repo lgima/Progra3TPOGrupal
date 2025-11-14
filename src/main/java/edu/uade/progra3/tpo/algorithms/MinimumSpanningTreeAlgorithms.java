@@ -101,57 +101,34 @@ public class MinimumSpanningTreeAlgorithms {
      * @return Mapa con las aristas seleccionadas y el peso total.
      */
     public Map<String, Object> kruskal(Graph graph) {
-        
-        List<KruskalEdge> resultEdges = new ArrayList<>(); // Si se elimina, no se podrán almacenar las aristas del MST
-        int totalWeight = 0; // Si se elimina, no se podrá calcular el peso total del MST
-        
-        // 1. Inicialización (Disjoint Sets / Bosque) 
-        // Mapa 'forest': Cada nodo inicia en su propio conjunto aislado.
-        // Key: ID del conjunto, Value: Set de vértices en ese conjunto.
-        Map<String, Set<String>> forest = new HashMap<>(); // Si se elimina, no se podrán gestionar los conjuntos disjuntos
-        
-        for (String vertex : graph.getVertices()) { // Si se elimina, no se inicializarán los conjuntos disjuntos
-            Set<String> set = new HashSet<>();
-            set.add(vertex);
-            forest.put(vertex, set);
+        List<KruskalEdge> resultEdges = new ArrayList<>(); // Almacena las aristas seleccionadas para el MST. Si se elimina, no se podrá construir el resultado.
+        int totalWeight = 0; // Acumula el peso total del MST. Si se elimina, no se podrá calcular el costo total.
+        Map<String, Set<String>> forest = new HashMap<>(); // Mapa para gestionar los conjuntos disjuntos. Si se elimina, no se podrá rastrear qué nodos están conectados.
+        for (String vertex : graph.getVertices()) {
+            Set<String> set = new HashSet<>(); // Crea un conjunto para cada vértice. Si se elimina, no se podrá inicializar el bosque.
+            set.add(vertex); // Agrega el vértice al conjunto. Si se elimina, el conjunto estará vacío.
+            forest.put(vertex, set); // Asocia el vértice con su conjunto. Si se elimina, no se podrá rastrear el conjunto de cada vértice.
         }
-        
-        // 2. Preparación de Aristas 
-        // Aplanamos el grafo para tener una lista simple de todas las aristas.
-        List<KruskalEdge> allEdges = new ArrayList<>(); // Si se elimina, no se podrá almacenar la lista de aristas del grafo
-        for (String from : graph.getVertices()) { // Si se elimina, no se recorrerán los vértices del grafo
-            for (Map.Entry<String, Integer> entry : graph.getNeighbors(from).entrySet()) { // Si se elimina, no se recorrerán los vecinos de cada vértice
-                allEdges.add(new KruskalEdge(from, entry.getKey(), entry.getValue())); // Si se elimina, no se agregarán las aristas a la lista
+        List<KruskalEdge> allEdges = new ArrayList<>(); // Lista de todas las aristas del grafo. Si se elimina, no se podrá procesar el grafo.
+        for (String from : graph.getVertices()) {
+            for (Map.Entry<String, Integer> entry : graph.getNeighbors(from).entrySet()) {
+                allEdges.add(new KruskalEdge(from, entry.getKey(), entry.getValue())); // Agrega cada arista a la lista. Si se elimina, el algoritmo no tendrá datos para procesar.
             }
         }
-        
-        //3. Ordenamiento 
-        // Ordenamos de menor a mayor peso. O(E log E).
-        Collections.sort(allEdges); // Si se elimina, no se ordenarán las aristas por peso
-        
-        // --- 4. Procesamiento y Unión ---
-        for (KruskalEdge edge : allEdges) { // Si se elimina, no se procesarán las aristas del grafo
-            // Buscamos a qué conjunto pertenece cada extremo de la arista
-            String setA = findSet(forest, edge.from); // Si se elimina, no se determinará el conjunto del vértice origen
-            String setB = findSet(forest, edge.to); // Si se elimina, no se determinará el conjunto del vértice destino
-            
-            // Solo unimos si están en conjuntos distintos.
-            // Si setA == setB, significa que ya están conectados por otro camino
-            if (setA != null && setB != null && !setA.equals(setB)) { // Si se elimina, se podrían incluir ciclos en el MST
-                
-                // Aceptamos la arista en la solución
-                resultEdges.add(edge); // Si se elimina, no se incluirá la arista en el MST
-                totalWeight += edge.weight; // Si se elimina, no se acumulará el peso total del MST
-                
-                // Fusionamos los dos conjuntos en uno solo
-                union(forest, setA, setB); // Si se elimina, no se fusionarán los conjuntos disjuntos
+        Collections.sort(allEdges); // Ordena las aristas por peso. Si se elimina, el algoritmo no procesará las aristas en el orden correcto.
+        for (KruskalEdge edge : allEdges) {
+            String setA = findSet(forest, edge.from); // Encuentra el conjunto del vértice origen. Si se elimina, no se podrá verificar la conexión.
+            String setB = findSet(forest, edge.to); // Encuentra el conjunto del vértice destino. Si se elimina, no se podrá verificar la conexión.
+            if (setA != null && setB != null && !setA.equals(setB)) { // Verifica si los vértices están en conjuntos distintos. Si se elimina, el algoritmo podría incluir ciclos.
+                resultEdges.add(edge); // Agrega la arista al MST. Si se elimina, el MST estará incompleto.
+                totalWeight += edge.weight; // Suma el peso de la arista al costo total. Si se elimina, el costo será incorrecto.
+                union(forest, setA, setB); // Une los conjuntos de los vértices. Si se elimina, el algoritmo no podrá conectar los nodos.
             }
         }
-        
-        Map<String, Object> result = new HashMap<>(); // Si se elimina, no se podrá almacenar el resultado final
-        result.put("edges", resultEdges); // Si se elimina, no se incluirán las aristas del MST en el resultado
-        result.put("totalWeight", totalWeight); // Si se elimina, no se incluirá el peso total en el resultado
-        return result; // Si se elimina, no se devolverá el resultado del algoritmo
+        Map<String, Object> result = new HashMap<>(); // Crea el mapa para almacenar el resultado. Si se elimina, no se podrá devolver el resultado.
+        result.put("edges", resultEdges); // Agrega las aristas al resultado. Si se elimina, el resultado no incluirá las aristas.
+        result.put("totalWeight", totalWeight); // Agrega el peso total al resultado. Si se elimina, el resultado no incluirá el costo.
+        return result; // Devuelve el resultado del algoritmo. Si se elimina, el algoritmo no tendrá salida.
     }
     
     /**
@@ -160,12 +137,12 @@ public class MinimumSpanningTreeAlgorithms {
      * Complejidad: O(V)(recorre linealmente).
      */
     private String findSet(Map<String, Set<String>> forest, String vertex) {
-        for (Map.Entry<String, Set<String>> entry : forest.entrySet()) { // Si se elimina, no se buscará el conjunto del vértice
-            if (entry.getValue().contains(vertex)) { // Si se elimina, no se validará si el vértice pertenece al conjunto
-                return entry.getKey(); // Si se elimina, no se retornará el identificador del conjunto
+        for (Map.Entry<String, Set<String>> entry : forest.entrySet()) {
+            if (entry.getValue().contains(vertex)) {
+                return entry.getKey();
             }
         }
-        return null; // Si se elimina, no se manejarán vértices que no pertenezcan a ningún conjunto
+        return null;
     }
     
     /**
@@ -175,13 +152,13 @@ public class MinimumSpanningTreeAlgorithms {
      */
     private void union(Map<String, Set<String>> forest, String setA, String setB) {
         // Creamos un 'Set' con elementos de A y B
-        Set<String> unionSet = new HashSet<>(forest.get(setA)); // Si se elimina, no se combinarán los conjuntos
-        unionSet.addAll(forest.get(setB)); // Si se elimina, no se agregarán los elementos del segundo conjunto
+        Set<String> unionSet = new HashSet<>(forest.get(setA));
+        unionSet.addAll(forest.get(setB));
         
         // Actualizamos la referencia en el mapa para los nodos involucrados
         // para que apunten al nuevo conjunto unido.
-        for (String vertex : unionSet) { // Si se elimina, no se actualizarán las referencias de los vértices
-            forest.put(vertex, unionSet); // Si se elimina, no se actualizarán los conjuntos en el mapa
+        for (String vertex : unionSet) {
+            forest.put(vertex, unionSet);
         }
     }
     
@@ -200,7 +177,16 @@ public class MinimumSpanningTreeAlgorithms {
         @Override
         public int compareTo(KruskalEdge other) {
             // Define el orden natural por peso ascendente
-            return Integer.compare(this.weight, other.weight); // Si se elimina, no se podrá ordenar por peso
+            return Integer.compare(this.weight, other.weight);
+        }
+
+        @Override
+        public String toString() {
+            return "{" +
+                   "de: '" + from + '\'' +
+                   ", a: '" + to + '\'' +
+                   ", peso: " + weight +
+                   '}';
         }
     }
 }
